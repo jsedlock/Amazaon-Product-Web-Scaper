@@ -53,13 +53,14 @@ def price_scrape():
   soup2 = BeautifulSoup(soup1.prettify(), 'html.parser')
 
   # now we will locate the title and price text from the html code
-  title = soup2.find(id = 'productTitle').get_text()
-  price = soup2.find("span", attrs={'class':'a-offscreen'}).get_text()
+  title = soup2.find(id = 'productTitle')
+  price = soup2.find("span", attrs={'class':'a-offscreen'})
 
   # cleaning the string format for the title and price
-  price = price.strip().replace('$' , '')
-  price = float(price.replace(',', ''))
   title = title.strip()
+
+  price = price.get_text().strip().replace('$' , '')
+  price = price.replace(',', '')
 
   if price < 1689:
     send_mail()
@@ -72,8 +73,6 @@ def price_scrape():
   with open('Amazon_Macbook_Prices.csv', 'a+', newline='', encoding = 'UTF8') as f:
     writer = csv.writer(f)
     writer.writerow(data)
-
-    # putting the price_scrape function on a timer
 
 while(True):
     price_scrape()
