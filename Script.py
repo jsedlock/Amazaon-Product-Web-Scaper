@@ -35,15 +35,10 @@ def price_scrape():
   '''
 
   # Connect to Website
-  URL = 'https://www.amazon.com/Late-Apple-MacBookPro-Silver-Renewed/dp/B09Q4GQRXZ/ref=sr_1_1?crid=24FZTZWXRGVSK&keywords=16+in+macbook+pro+m1+16+gb+ram&qid=1682528722&sprefix=16+in+macbook+pro+m1+16+gb+ram%2Caps%2C93&sr=8-1'
+  URL = 'https://www.amazon.com/Late-Apple-MacBookPro-Silver-Renewed/dp/B09Q4GQRXZ/ref=sr_1_4?crid=3QE0YEN18LLPL&keywords=16+in+2021+macbook+pro&qid=1682948016&sprefix=16+in+2021+macbook+pro+%2Caps%2C90&sr=8-4'
 
-  headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15", 
-         "Accept-Encoding":"gzip, deflate",
-           "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", 
-           "DNT":"1",
-           "Connection":"close", 
-           "Upgrade-Insecure-Requests":"1"}
-  
+  headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15", "Accept-Encoding":"gzip, deflate", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8", "DNT":"1","Connection":"close", "Upgrade-Insecure-Requests":"1"}
+
   page = requests.get(URL, headers=headers)
 
   # pulling all contents from the page into an HTML format
@@ -53,16 +48,17 @@ def price_scrape():
   soup2 = BeautifulSoup(soup1.prettify(), 'html.parser')
 
   # now we will locate the title and price text from the html code
+
   title = soup2.find(id = 'productTitle')
   price = soup2.find("span", attrs={'class':'a-offscreen'})
 
   # cleaning the string format for the title and price
-  title = title.strip()
+  title = title.get_text().strip()
 
   price = price.get_text().strip().replace('$' , '')
   price = price.replace(',', '')
 
-  if price < 1689:
+  if float(price) < 1700:
     send_mail()
 
   today = datetime.date.today()
